@@ -29,13 +29,18 @@ public class PlayerControllerX : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
+    private Rigidbody GetPlayerRb()
+    {
+        return playerRb;
+    }
+
+    // Update is called once per frames
+    void Update(Rigidbody playerRb)
     {
         // While space is pressed and player is low enough, float up
         if (Input.GetKey(KeyCode.Space) && !gameOver)
         {
-            playerRb.AddForce(Vector3.up * floatForce);
+            playerRb.AddForce(Vector3.up * floatForce, ForceMode.Impulse);
         }
     }
 
