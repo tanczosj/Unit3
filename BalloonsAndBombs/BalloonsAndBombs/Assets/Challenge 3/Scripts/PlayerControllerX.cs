@@ -6,7 +6,7 @@ public class PlayerControllerX : MonoBehaviour
 {
     public bool gameOver;
 
-    public float floatForce;
+    public float floatForce = 50f;
     private float gravityModifier = 1.5f;
     private Rigidbody playerRb;
 
@@ -16,6 +16,10 @@ public class PlayerControllerX : MonoBehaviour
     private AudioSource playerAudio;
     public AudioClip moneySound;
     public AudioClip explodeSound;
+    private float CooldownTimer = 0;
+    private float cooldowntimerDefault = 0.3f;
+  
+
 
 
     // Start is called before the first frame update
@@ -23,25 +27,30 @@ public class PlayerControllerX : MonoBehaviour
     {
         Physics.gravity *= gravityModifier;
         playerAudio = GetComponent<AudioSource>();
+        playerRb = GetComponent<Rigidbody>();
 
         // Apply a small upward force at the start of the game
-        playerRb.AddForce(Vector3.up * 5, ForceMode.Impulse);
+        playerRb.AddForce(Vector3.up * 2, ForceMode.Impulse);
 
-    }
-
-    private Rigidbody GetPlayerRb()
-    {
-        return playerRb;
     }
 
     // Update is called once per frames
-    void Update(Rigidbody playerRb)
+    void Update()
     {
-        // While space is pressed and player is low enough, float up
-        if (Input.GetKey(KeyCode.Space) && !gameOver)
+        var velocity = playerRb.linearVelocity.magnitude;
+
+        if (Input.GetKey(KeyCode.L))
         {
+
+        }
+
+        // While space is pressed and player is low enough, float up
+        if (Input.GetKey(KeyCode.Space) && !gameOver && playerRb.linearVelocity.y <= 0 && CooldownTimer <= 0 && transform.position.y < 15)  //  CooldownTimer <= 0
+        {
+            CooldownTimer = cooldowntimerDefault;
             playerRb.AddForce(Vector3.up * floatForce, ForceMode.Impulse);
         }
+        CooldownTimer -= Time.deltaTime;
     }
 
     private void OnCollisionEnter(Collision other)
